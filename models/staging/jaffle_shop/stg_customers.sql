@@ -1,8 +1,9 @@
-with customers as (
-    select id as customer_id,
-        first_name,
-        last_name
-    from jaffle_shop_customers
-)
-select *
-from customers
+SELECT
+    id AS customer_id,
+    first_name,
+    last_name
+FROM
+    {{ source(
+        'jaffle_shop',
+        'jaffle_shop_customers'
+    ) }}
