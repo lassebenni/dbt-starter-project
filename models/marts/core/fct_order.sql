@@ -6,12 +6,14 @@ WITH orders AS (
             'stg_orders'
         ) }}
 ),
+
 payments AS (
     SELECT
         *
     FROM
         {{ ref('stg_payments') }}
 ),
+
 order_payments AS (
     SELECT
         order_id,
@@ -25,7 +27,8 @@ order_payments AS (
     GROUP BY
         1
 ),
-FINAL AS (
+
+final AS (
     SELECT
         orders.order_id,
         orders.customer_id,
@@ -36,9 +39,10 @@ FINAL AS (
         ) AS amount
     FROM
         orders
-        LEFT JOIN order_payments USING (order_id)
+    LEFT JOIN order_payments USING (order_id)
 )
+
 SELECT
     *
 FROM
-    FINAL
+    final

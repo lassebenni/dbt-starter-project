@@ -4,12 +4,14 @@ WITH customers AS (
     FROM
         {{ ref('stg_customers') }}
 ),
+
 orders AS (
     SELECT
         *
     FROM
         {{ ref('fct_order') }}
 ),
+
 customer_orders AS (
     SELECT
         customer_id,
@@ -22,23 +24,25 @@ customer_orders AS (
     GROUP BY
         1
 ),
-FINAL AS (
+
+final AS (
     SELECT
         customers.customer_id,
         customers.first_name,
         customers.last_name,
         customer_orders.first_order_date,
         customer_orders.most_recent_order_date,
+        customer_orders.lifetime_value,
         COALESCE(
             customer_orders.number_of_orders,
             0
-        ) AS number_of_orders,
-        customer_orders.lifetime_value
+        ) AS number_of_orders
     FROM
         customers
-        LEFT JOIN customer_orders USING (customer_id)
+    LEFT JOIN customer_orders USING (customer_id)
 )
+
 SELECT
     *
 FROM
-    FINAL
+    final
